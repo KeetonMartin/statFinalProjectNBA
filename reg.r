@@ -127,3 +127,53 @@ powerTransform(             cbind(games$FG_PCT_home,
 hist(games$REB_home)
 
 hist(games$FT_PCT_away^2)
+
+games_transformed <- data.frame(FG_PCT_home = games$FG_PCT_home**(0.75), 
+                                FG_PCT_away = games$FG_PCT_away,
+                                AST_home = games$AST_home**(0.75),
+                                AST_away = games$AST_away**(0.75),
+                                REB_home_t = sqrt(games$REB_home),
+                                REB_away_t = sqrt(games$REB_away),
+                                FG3_PCT_home = games$FG3_PCT_home,
+                                FG3_PCT_away = games$FG3_PCT_away,
+                                FT_PCT_home_t = games$FT_PCT_home**2,
+                                FT_PCT_away_t = games$FT_PCT_away**2,
+                                WIN_PCT_home = games$WIN_PCT_home,
+                                WIN_PCT_away = games$WIN_PCT_away,                            
+                                PTS_diff = games$PTS_diff)
+
+FullModel3 = lm(games_transformed$PTS_diff ~ 
+                              games_transformed$FG_PCT_home+
+                              games_transformed$FG_PCT_away+
+                              games_transformed$AST_home+
+                              games_transformed$AST_away+
+                              games_transformed$REB_home_t+
+                              games_transformed$REB_away_t+
+                              games_transformed$FG3_PCT_home+
+                              games_transformed$FG3_PCT_away+
+                              games_transformed$FT_PCT_home_t+
+                              games_transformed$FT_PCT_away_t+
+                              games_transformed$WIN_PCT_home+
+                              games_transformed$WIN_PCT_away                
+                        ); summary(FullModel3)
+
+games_close <- games %>% filter(PTS_diff>-20 & PTS_diff< 20)
+
+games_close <- subset(games, PTS_diff>-20 & PTS_diff<20)
+
+FullModel4 = lm(games_close$PTS_diff ~ 
+                              games_close$FG_PCT_home+
+                              games_close$FG_PCT_away+
+                              games_close$AST_home+
+                              games_close$AST_away+
+                              games_close$REB_home+
+                              games_close$REB_away+
+                              games_close$FG3_PCT_home+
+                              games_close$FG3_PCT_away+
+                              games_close$FT_PCT_home+
+                              games_close$FT_PCT_away+
+                              games_close$WIN_PCT_home+
+                              games_close$WIN_PCT_away                  
+                        ); summary(FullModel4)
+
+
